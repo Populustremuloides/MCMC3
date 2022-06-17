@@ -69,4 +69,5 @@ Losing entire rows is worse that losing the same number of nodes sparcely throug
 
 ![plot](Figures/Figure_15_mary_dataset.png)
 
+![plot](Figures/Figure_16_maryNo_dataset.png)
 
