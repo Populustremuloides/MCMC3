@@ -26,3 +26,5 @@ Mean Parameter:
 ![plot](Figures/Figure_5_burglary_samples.png)
 
 ![plot](Figures/Figure_6_earthquake_samples.png)
+
+![plot](Figures/Figure_7_mary_params.png)
