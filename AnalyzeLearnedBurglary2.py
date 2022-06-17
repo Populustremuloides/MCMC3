@@ -1,10 +1,10 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def getName(numSamples, numHyperParams, observationDropProp):
-    obsString = str(observationDropProb)
+def getName(numSamples, numHyperParams, observationDropProp, dataType=""):
+    obsString = str(observationDropProp)
     obsString = obsString.split(".")[1][:2]
-    outputFile = "network_samples_learned_burglary_" + str(numHyperParams) + "_" + str(obsString) + "_" + str(numSamples) + ".csv"
+    outputFile = "network_samples_learned_burglary_" + str(numHyperParams) + "_" + str(obsString) + "_" + str(numSamples) + "_" + dataType + ".csv"
     return outputFile
 
 def plotData(dfs, column, title, legendTitle, names):
@@ -52,16 +52,32 @@ def plotData(dfs, column, title, legendTitle, names):
 # plotData(dfs=dfs, column="PROB_earthquake", title="Probability of Earthquake", legendTitle="# hyperparameters", names=hyperParameters)
 
 
-observationDropProbs = [0.25, 0.1, 0.0]
+# observationDropProbs = [0.25, 0.1, 0.0]
+# dfs = []
+# for observationDropProb in observationDropProbs:
+#     numSamples = 100
+#     numHyperParams = 0
+#     name = getName(numSamples, numHyperParams, observationDropProb)
+#     df = pd.read_csv(name)
+#     dfs.append(df)
+#
+# plotData(dfs=dfs, column="PROB_maryGivenA", title="Probability of Mary given Alarm", legendTitle="% observation dropped", names=observationDropProbs)
+# plotData(dfs=dfs, column="PROB_maryGivenNotA", title="Probability of Mary given no Alarm", legendTitle="% observation dropped", names=observationDropProbs)
+# plotData(dfs=dfs, column="PROB_burglary", title="Probability of Burglary", legendTitle="% observation dropped", names=observationDropProbs)
+# plotData(dfs=dfs, column="PROB_earthquake", title="Probability of Earthquake", legendTitle="% observation dropped", names=observationDropProbs)
+
+dataTypes = ["old_sparse","updated"]
 dfs = []
-for observationDropProb in observationDropProbs:
+for dataType in dataTypes:
     numSamples = 100
     numHyperParams = 0
-    name = getName(numSamples, numHyperParams, observationDropProb)
+    observationDropProp = 0.0
+    name = getName(numSamples, numHyperParams, observationDropProp, dataType)
     df = pd.read_csv(name)
+    print(df.mean())
     dfs.append(df)
 
-plotData(dfs=dfs, column="PROB_maryGivenA", title="Probability of Mary given Alarm", legendTitle="% observation dropped", names=observationDropProbs)
-plotData(dfs=dfs, column="PROB_maryGivenNotA", title="Probability of Mary given no Alarm", legendTitle="% observation dropped", names=observationDropProbs)
-plotData(dfs=dfs, column="PROB_burglary", title="Probability of Burglary", legendTitle="% observation dropped", names=observationDropProbs)
-plotData(dfs=dfs, column="PROB_earthquake", title="Probability of Earthquake", legendTitle="% observation dropped", names=observationDropProbs)
+plotData(dfs=dfs, column="PROB_maryGivenA", title="Probability of Mary given Alarm", legendTitle="% observation dropped", names=dataTypes)
+plotData(dfs=dfs, column="PROB_maryGivenNotA", title="Probability of Mary given no Alarm", legendTitle="% observation dropped", names=dataTypes)
+plotData(dfs=dfs, column="PROB_burglary", title="Probability of Burglary", legendTitle="% observation dropped", names=dataTypes)
+plotData(dfs=dfs, column="PROB_earthquake", title="Probability of Earthquake", legendTitle="% observation dropped", names=dataTypes)

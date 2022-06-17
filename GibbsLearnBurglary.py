@@ -54,44 +54,40 @@ def generateData(numHyperParams, observationDropProb, numSamples, data, dataSour
 
 # various tests for different scenarios
 
-# # number of samples
-# print()
-# print("testing number of samples ***************8")
-# print()
-# for numSamples in [10,50,100,200]:
-#     numHyperParams = 0
-#     observationDropProb = 0.0
-#     data = "network_samples_burglary_newProbs.csv"
-#     generateData(numHyperParams, observationDropProb, numSamples, data)
+# number of samples
+print()
+print("testing number of samples ***************8")
+print()
+for numSamples in [10,50,100,200]:
+    numHyperParams = 0
+    observationDropProb = 0.0
+    data = "network_samples_burglary_newProbs.csv"
+    generateData(numHyperParams, observationDropProb, numSamples, data)
 
 # number of hyper parameters
-# print()
-# print("testing number of hyper parameters ***************8")
-# print()
-# for numHyperParams in [0]:#, 5, 10]:
-#     numSamples = 50
-#     observationDropProb = 0.0
-#     data = "network_samples_burglary_newProbs.csv"
-#     generateData(numHyperParams, observationDropProb, numSamples, data)
+print()
+print("testing number of hyper parameters ***************8")
+print()
+for numHyperParams in [0]:#, 5, 10]:
+    numSamples = 50
+    observationDropProb = 0.0
+    data = "network_samples_burglary_newProbs.csv"
+    generateData(numHyperParams, observationDropProb, numSamples, data)
 
-# print()
-# print("testing number of obsevations to drop ***************8")
-# print()
-# for observationDropProb in [0., 0.1,0.25]:
-#     numHyperParams = 0
-#     numSamples = 100
-#     data = "network_samples_burglary_newProbs.csv"
-#     generateData(numHyperParams, observationDropProb, numSamples, data)
+print()
+print("testing number of obsevations to drop ***************8")
+print()
+for observationDropProb in [0., 0.1,0.25]:
+    numHyperParams = 0
+    numSamples = 100
+    data = "network_samples_burglary_newProbs.csv"
+    generateData(numHyperParams, observationDropProb, numSamples, data)
 
 print()
 print("testing datasets ***************8")
 print()
-i = 0
-for data in ["network_samples_burglary_newProbs.csv", "network_samples_burglary_oldProbs.csv"]:
-    numHyperParams = 0
-    observationDropProb = 0.0
-    numSamples = 100
-    if i == 0:
-        generateData(numHyperParams, observationDropProb, numSamples, data, dataSource="updated")
-    else:
-        generateData(numHyperParams, observationDropProb, numSamples, data, dataSource="old_sparse")
+numHyperParams = 0
+observationDropProb = 0.0
+numSamples = 100
+generateData(numHyperParams, observationDropProb, numSamples, "network_samples_burglary_newProbs.csv", dataSource="updated")
+generateData(numHyperParams, observationDropProb, numSamples, "network_samples_burglary_oldProbs.csv", dataSource="old_sparse")
