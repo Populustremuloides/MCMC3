@@ -67,6 +67,13 @@ Losing entire rows is worse that losing the same number of nodes sparcely throug
 
 ## Adjustments in the dataset used (the old, "sparse" network or the new one):
 
+The largest difference induced by switching the dataset to the old version with low probabilities for earthquakes and burglaries is that 
+the certainty for the parameters conditioned on those rare events became highly uncertain.
+On the contrary, however, there was not a significant increase in uncertainty for those rare events themselves.
+This makes sense that an event that is conditioned on a rare event would be even more rare than the rare event.
+In any case, the uncertanity might have been reduced had a higher number of data nodes been included.
+In these examples, 100 data samples were used for each parameter being estimated.
+
 ![plot](Figures/Figure_15_mary_dataset.png)
 
 ![plot](Figures/Figure_16_maryNo_dataset.png)
