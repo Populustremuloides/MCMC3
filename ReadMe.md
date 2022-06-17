@@ -22,3 +22,5 @@ Mean Parameter:
 ![plot](Figures/Figure_3_marygivenA_samples.png) 
 
 ![plot](Figures/Figure_4_marygivenNotA_samples.png) 
+
+![plot](Figure_5_burglary_samples.png)
