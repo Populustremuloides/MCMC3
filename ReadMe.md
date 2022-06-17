@@ -52,6 +52,7 @@ However, I am tempted to say that this effect might not even be statistically si
 Compared to varying the size of the dataset, adjusting the number % of data nodes associated with each learned parameter had a very small effect.
 In one instance the mean of the mixing distribution shifted up, but in all other cases, it seems like the variance increases only slightly
 as a result of dropping nodes.
+
 I believe that this results from the fact that the main structure of the network is still largely preserved when only one or two nodes are dropped,
 whereas when a whole "row" of data is dropped, any information about connections between nodes that was in that data is lost.
 Losing entire rows is worse that losing the same number of nodes sparcely through the network.
@@ -66,5 +67,6 @@ Losing entire rows is worse that losing the same number of nodes sparcely throug
 
 ## Adjustments in the dataset used (the old, "sparse" network or the new one):
 
+![plot](Figures/Figure_15_mary_dataset.png)
 
 
