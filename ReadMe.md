@@ -1,6 +1,4 @@
-# Gibbs Tweaks
-
-## Results from learning the faculty data
+# Faculty Data
 
 The following are figures representing the learning process for the faculty data.
 The legend in each figure represents the number of hyperparameters that were used in generating the learning run.
@@ -17,6 +15,8 @@ Mean Parameter:
 
 ![plot](Figures/Figure_2_faculty_estimated_mus.png)
 
+# Burglary Network
+
 ## Adjustments to the number of data points per estimated node:
 
 ![plot](Figures/Figure_3_marygivenA_samples.png) 
@@ -27,6 +27,9 @@ Mean Parameter:
 
 ![plot](Figures/Figure_6_earthquake_samples.png)
 
+## Adjustments to the number of hyper parameters on the priors:
+
+
 ![plot](Figures/Figure_7_mary_params.png)
 
 ![plot](Figures/Figure_8_maryNo_params.png)
@@ -35,6 +38,8 @@ Mean Parameter:
 
 ![plot](Figures/Figure_10_earthquake_params.png)
 
+## Adjustments to the number of data nodes dropped:
+
 ![plot](Figures/Figure_11_mary_dropped.png)
 
 ![plot](Figures/Figure_12_maryNot_dropped.png)
@@ -42,5 +47,8 @@ Mean Parameter:
 ![plot](Figures/Figure_13_burglary_dropped.png)
 
 ![plot](Figures/Figure_14_earthquake_dropped.png)
+
+## Adjustments in the dataset used (the old, "sparse" network or the new one):
+
 
 
