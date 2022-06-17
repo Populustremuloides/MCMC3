@@ -19,6 +19,6 @@ Mean Parameter:
 
 ## Adjustments to the number of data points per estimated node:
 
-![plot](Figures/Figure_3_margygivenA_samples.png)
+![plot](Figures/Figure_3_marygivenA_samples.png) 
 
-![plot](Figures/Figure_3_margygivenNotA_samples.png)
+![plot](Figures/Figure_3_marygivenNotA_samples.png)
