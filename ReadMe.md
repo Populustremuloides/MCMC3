@@ -41,4 +41,6 @@ Mean Parameter:
 
 ![plot](Figures/Figure_13_burglary_dropped.png)
 
+![plot](Figures/Figure_14_earthquake_dropped.png)
+
 
