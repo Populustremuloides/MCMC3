@@ -28,7 +28,7 @@ class Node():
         self.initialized = False
 
     def getProbabilityRelativeToObservedChildren(self, x, xPrime):
-        return 0 # FIXME: get rid of this statement
+        # return 0 # FIXME: get rid of this statement
         densitiesCurrent = 1
         for child in self.children:
             # if child.observed: # FIXME: put this back

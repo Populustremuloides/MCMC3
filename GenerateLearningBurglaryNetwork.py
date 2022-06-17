@@ -1,163 +1,220 @@
-import pandas as pd
 from Nodes import *
+import pandas as pd
 
+def multiConditional(parents):
+    burglary = parents[0]
+    earthquake = parents[1]
 
+    if burglary == 1 and earthquake == 1:
+        p = parents[2].state #0.95
+    elif burglary == 1 and earthquake == 0:
+        p = parents[3].state #0.94
+    elif burglary == 0 and earthquake == 1:
+        p = parents[4].state #0.29
+    elif burglary == 0 and earthquake == 0:
+        p = parents[5].state #0.2
+    return p
 
-def getParentState(parents):
+def conditionalJohn(parents):
+    alarm = parents[0]
+    if alarm == 1:
+        p = parents[1].state #0.9
+    else:
+        p = parents[2].state #0.2
+    return p
+
+def conditionalMary(parents):
+    alarm = parents[0]
+    if alarm == 1:
+        p = parents[1].state #0.7
+    else:
+        p = parents[2].state #0.3
+    return p
+
+def getParents(parents):
     return parents[0].state
 
-def generateNetwork(numSamples, numHyperParameters, dataset):
-    dfData = pd.read_csv(dataset)
+def generateNetwork(numHyperParams=0, observationDropProb=0, numSamples=100, data=None):
 
-    # prior nodes
-    priorBurglaryAlpha = GammaNode(shape=1,scale=0.5,gType="log", name="PriorBurglaryAlpha")
-    priorBurglaryBeta = GammaNode(shape=1,scale=0.5,gType="log", name="PriorBurglaryBeta")
-    priorEarthquakeAlpha = GammaNode(shape=1,scale=0.5,gType="log", name="PriorEarthquakeAlpha")
-    priorEarthquakeBeta = GammaNode(shape=1,scale=0.5,gType="log", name="PriorEarthquakeBeat")
-    priorAlarmAlpha = GammaNode(shape=1,scale=0.5,gType="log", name="PriorAlarmAlpha")
-    priorAlarmBeta = GammaNode(shape=1,scale=0.5,gType="log", name="PriorAlarmBeat")
-    priorJohnAlpha = GammaNode(shape=1,scale=0.5,gType="log", name="PriorJohnAlpha")
-    priorJohnBeta = GammaNode(shape=1,scale=0.5,gType="log", name="PriorJohnBeta")
-    priorMaryAlpha = GammaNode(shape=1,scale=0.5,gType="log", name="PriorMaryAlpha")
-    priorMaryBeta = GammaNode(shape=1,scale=0.5,gType="log", name="PriorMaryBeta")
+    # hyperparameters for "observed" probabilities (to be used if probabilityNodes are not observed)
+    # I am not being excessive here with them. Just one per beta distribution variable
+    hyperAlarmGivenBandE = GammaNode(shape=10, scale=2, gType="log", name="hyperAlarmGivenBandE")
+    hyperAlarmGivenBandNotE = GammaNode(shape=10, scale=2, gType="log", name="hyperAlarmGivenBandNotE")
+    hyperAlarmGivenNotBandE = GammaNode(shape=10, scale=2, gType="log", name="hyperAlarmGivenNotBandE")
+    hyperAlarmGivenNotBandNotE = GammaNode(shape=10, scale=2, gType="log", name="hyperAlarmGivenNotBandNotE")
 
-    # POSTERIOR NODES
+    hyperJohnGivenA = GammaNode(shape=10, scale=2, gType="log", name="hyperJohnGivenA")
+    hyperJohnGivenNotA = GammaNode(shape=10, scale=2, gType="log", name="hyperJohnGivenNotA")
 
-    # BURGLARY ****************************************************************
-    if numHyperParameters > 0:
-        burglaryAlphaLinker = LinkerNode([priorBurglaryAlpha], getParentState)
+    hyperMaryGivenA  = GammaNode(shape=10, scale=2, gType="log", name="hyperMaryGivenA")
+    hyperMaryGivenNotA  = GammaNode(shape=10, scale=2, gType="log", name="hyperMaryGivenNotA")
+
+    hyperBurglary = GammaNode(shape=10, scale=2, gType="log", name="hyperBurglary")
+    hyperEarthquake = GammaNode(shape=10, scale=2, gType="log", name="hyperEarthquake")
+
+    # probability Nodes **************************************************************
+
+    keptHyperNodes = []
+
+    # multi-conditional parents of Alarm
+    if numHyperParams > 0:
+        linker = LinkerNode([hyperAlarmGivenBandE], getParents)
+        alarmGivenBandE = BetaNode(alpha=linker,beta=1, name="PROB_alarmGivenBandE")
+        hyperAlarmGivenBandE.initialize([alarmGivenBandE])
+        keptHyperNodes.append(hyperAlarmGivenBandE)
     else:
-        burglaryAlphaLinker = 1
-    if numHyperParameters > 1:
-        burglaryBetaLinker = LinkerNode([priorBurglaryBeta], getParentState)
+        alarmGivenBandE = BetaNode(alpha=1, beta=1, name="PROB_alarmGivenBandE")
+    if numHyperParams > 1:
+        linker = LinkerNode([hyperAlarmGivenBandNotE], getParents)
+        alarmGivenBandNotE = BetaNode(alpha=linker,beta=1, name="PROB_alarmGivenBandNotE")
+        hyperAlarmGivenBandNotE.initialize([alarmGivenBandNotE])
+        keptHyperNodes.append(hyperAlarmGivenBandNotE)
     else:
-        burglaryBetaLinker = 1
-    burglary = BetaNode(alpha=burglaryAlphaLinker,beta=burglaryBetaLinker, name="Burglary")
-
-    # EARTHQUAKE ****************************************************************
-    if numHyperParameters > 2:
-        earthquakeAlphaLinker = LinkerNode([priorEarthquakeAlpha], getParentState)
+        alarmGivenBandNotE = BetaNode(alpha=1, beta=1, name="PROB_alarmGivenBandNotE")
+    if numHyperParams > 2:
+        linker = LinkerNode([hyperAlarmGivenNotBandE], getParents)
+        alarmGivenNotBandE = BetaNode(alpha=linker,beta=1, name="PROB_alarmGivenNotBandE")
+        hyperAlarmGivenNotBandE.initialize([alarmGivenNotBandE])
+        keptHyperNodes.append(hyperAlarmGivenNotBandE)
     else:
-        earthquakeAlphaLinker = 1
-    if numHyperParameters > 3:
-        earthquakeBetaLinker = LinkerNode([priorEarthquakeBeta], getParentState)
+        alarmGivenNotBandE = BetaNode(alpha=1,beta=1, name="PROB_alarmGivenNotBandE")
+    if numHyperParams > 3:
+        linker = LinkerNode([hyperAlarmGivenNotBandNotE], getParents)
+        alarmGivenNotBandNotE = BetaNode(alpha=linker,beta=1, name="PROB_alarmGivenNotBandNotE")
+        hyperAlarmGivenNotBandNotE.initialize([alarmGivenNotBandNotE])
+        keptHyperNodes.append(hyperAlarmGivenNotBandNotE)
     else:
-        earthquakeBetaLinker = 1
-    earthquake = BetaNode(alpha=earthquakeAlphaLinker,beta=earthquakeBetaLinker, name="Earthquake")
+        alarmGivenNotBandNotE = BetaNode(alpha=1, beta=1, name="PROB_alarmGivenNotBandNotE")
 
-    # ALARM ********************************************************************
-    if numHyperParameters > 4:
-        alarmAlphaLinker = LinkerNode([priorAlarmAlpha], getParentState)
+    # conditional parents of JohnCalls
+    if numHyperParams > 4:
+        linker = LinkerNode([hyperJohnGivenA], getParents)
+        johnGivenA = BetaNode(alpha=linker,beta=1, name="PROB_johnGivenA")
+        hyperJohnGivenA.initialize([johnGivenA])
+        keptHyperNodes.append(hyperJohnGivenA)
     else:
-        alarmAlphaLinker = 1
-    if numHyperParameters > 5:
-        alarmBetaLinker = LinkerNode([priorAlarmBeta], getParentState)
+        johnGivenA = BetaNode(alpha=1, beta=1, name="PROB_johnGivenA")
+    if numHyperParams > 5:
+        linker = LinkerNode([hyperJohnGivenNotA], getParents)
+        johnGivenNotA = BetaNode(alpha=linker,beta=1, name="PROB_johnGivenNotA")
+        hyperJohnGivenNotA.initialize([johnGivenNotA])
+        keptHyperNodes.append(hyperJohnGivenNotA)
     else:
-        alarmBetaLinker = 1
-    alarm = BetaNode(alpha=alarmAlphaLinker,beta=alarmBetaLinker, name="Alarm")
+        johnGivenNotA = BetaNode(alpha=1, beta=1, name="PROB_johnGivenNotA")
 
-    # John ********************************************************************
-    if numHyperParameters > 6:
-        johnAlphaLinker = LinkerNode([priorJohnAlpha], getParentState)
+    # conditional parents of MaryCalls
+    if numHyperParams > 6:
+        linker = LinkerNode([hyperMaryGivenA], getParents)
+        maryGivenA = BetaNode(alpha=linker,beta=1, name="PROB_maryGivenA")
+        hyperMaryGivenA.initialize([maryGivenA])
+        keptHyperNodes.append(hyperMaryGivenA)
     else:
-        johnAlphaLinker = 1
-    if numHyperParameters > 7:
-        johnBetaLinker = LinkerNode([priorJohnBeta], getParentState)
+        maryGivenA = BetaNode(alpha=1, beta=1, name="PROB_maryGivenA")
+    if numHyperParams > 7:
+        linker = LinkerNode([hyperMaryGivenNotA], getParents)
+        maryGivenNotA = BetaNode(alpha=linker,beta=1, name="PROB_maryGivenNotA")
+        hyperMaryGivenNotA.initialize([maryGivenNotA])
+        keptHyperNodes.append(hyperMaryGivenNotA)
     else:
-        johnBetaLinker = 1
-    johnCalls = BetaNode(alpha=johnAlphaLinker,beta=johnBetaLinker, name="JohnCalls")
+        maryGivenNotA = BetaNode(alpha=1, beta=1, name="PROB_maryGivenNotA")
 
-    # Mary ********************************************************************
-    if numHyperParameters > 8:
-        maryAlphaLinker = LinkerNode([priorMaryAlpha], getParentState)
+    # probabilities of burglary
+    if numHyperParams > 8:
+        linker = LinkerNode([hyperBurglary], getParents)
+        pBurglary = BetaNode(alpha=linker,beta=1, name="PROB_burglary")
+        hyperBurglary.initialize([pBurglary])
+        keptHyperNodes.append(hyperBurglary)
     else:
-        maryAlphaLinker = 1
-    if numHyperParameters > 9:
-        maryBetaLinker = LinkerNode([priorMaryBeta], getParentState)
+        pBurglary = BetaNode(alpha=1, beta=1, name="PROB_burglary")
+    if numHyperParams > 9:
+        linker = LinkerNode([hyperEarthquake], getParents)
+        pEarthquake = BetaNode(alpha=linker,beta=1, name="PROB_earthquake")
+        hyperEarthquake.initialize([pEarthquake])
+        keptHyperNodes.append(hyperEarthquake)
     else:
-        maryBetaLinker = 1
-    maryCalls = BetaNode(alpha=maryAlphaLinker,beta=maryBetaLinker,name="MaryCalls")
+        pEarthquake = BetaNode(alpha=1,beta=1, name="PROB_earthquake")
 
-    # initialize children of the priors
-    priorBurglaryAlpha.initialize([burglary])
-    priorBurglaryBeta.initialize([burglary])
-    priorEarthquakeAlpha.initialize([earthquake])
-    priorEarthquakeBeta.initialize([earthquake])
-    priorAlarmAlpha.initialize([alarm])
-    priorAlarmBeta.initialize([alarm])
-    priorJohnAlpha.initialize([johnCalls])
-    priorJohnBeta.initialize([johnCalls])
-    priorMaryAlpha.initialize([maryCalls])
-    priorMaryBeta.initialize([maryCalls])
+    probabilityNodes = [pBurglary, pEarthquake, alarmGivenBandE,
+                        alarmGivenBandNotE, alarmGivenNotBandE,
+                        alarmGivenNotBandNotE, johnGivenA, johnGivenNotA,
+                        maryGivenA, maryGivenNotA]
 
-    # store the prior nodes
-    priors = [priorBurglaryAlpha, priorBurglaryBeta, priorEarthquakeAlpha,
-              priorEarthquakeBeta, priorAlarmAlpha, priorAlarmBeta,
-              priorJohnAlpha, priorJohnBeta, priorMaryAlpha, priorMaryBeta]
-    priors = priors[:numHyperParameters] # not the most efficient way, but keeps us from adding hyperparameters we aren't using
+    # initialize (even though potentially all of them may not be used)
 
-    # OBSERVATION NODES
 
-    # store the children observations in these lists
-    burglaryChildren = []
-    earthquakeChildren = []
-    alarmChildren = []
-    johnChildren = []
-    maryChildren = []
 
-    # initialize observation nodes
-    for index, row in dfData.iterrows():
-        # burglary observations
-        name = "burglary_obs_" + str(index)
-        bLinker = LinkerNode([burglary], getParentState)
-        burglaryObservation = BernouliNode(p=bLinker, name=name)
-        burglaryObservation.setObservation(row["Burglary"])
-        burglaryChildren.append(burglaryObservation)
 
-        # earthquake observations
-        name = "earthquake_obs_" + str(index)
-        eLinker = LinkerNode([earthquake], getParentState)
-        earthquakeObservation = BernouliNode(p=eLinker, name=name)
-        earthquakeObservation.setObservation(row["Earthquake"])
-        earthquakeObservation.initialize([]) # no children
-        earthquakeChildren.append(earthquakeObservation)
 
-        # alarm observations
-        name = "alarm_obs_" + str(index)
-        aLinker = LinkerNode([alarm], getParentState)
-        alarmObservation = BernouliNode(p=aLinker, name=name)
-        alarmObservation.setObservation(row["Alarm"])
-        alarmObservation.initialize([]) # no children
-        alarmChildren.append(alarmObservation)
 
-        # john observations
-        name = "john_obs_" + str(index)
-        jLinker = LinkerNode([johnCalls], getParentState)
-        johnObservation = BernouliNode(p=jLinker,name=name)
-        johnObservation.setObservation(row["JohnCalls"])
-        johnObservation.initialize([]) # no children
-        johnChildren.append(johnObservation)
 
-        # mary observations
-        name = "mary_obs_" + str(index)
-        mLinker = LinkerNode([maryCalls], getParentState)
-        maryObservation = BernouliNode(p=mLinker, name=name)
-        maryObservation.setObservation(row["MaryCalls"])
-        maryObservation.initialize([]) # no children
-        maryChildren.append(maryObservation)
+    # observation nodes *******************************************************************************************
 
+    pBurglaryChildren = []
+    pEarthquakeChildren = []
+    pAlarmChildren = []
+    pJohnChildren = []
+    pMaryChildren = []
+
+    df = pd.read_csv(data)
+
+    for index, row in df.iterrows():
+        randomNums = np.random.uniform(0,1, 5) # decide whether to keep all the data
+
+        # Burglary
+        if randomNums[0] > observationDropProb: # don't add the node if it is "dropped"
+            pBurglaryLinker = LinkerNode([pBurglary], getParents)
+            B = BernouliNode(p=pBurglaryLinker, name="Burglary")
+            B.setObservation(row["Burglary"])
+            pBurglaryChildren.append(B)
+
+        # Earthquake
+        if randomNums[1] > observationDropProb:
+            pEarthquakeLinker = LinkerNode([pEarthquake], getParents)
+            E = BernouliNode(p=pEarthquakeLinker, name="Earthquake")
+            E.setObservation(row["Earthquake"])
+            pEarthquakeChildren.append(E)
+
+        # Alarms
+        if randomNums[2] > observationDropProb:
+            alarmPs = LinkerNode([row["Burglary"], row["Earthquake"], alarmGivenBandE, alarmGivenBandNotE,
+                                  alarmGivenNotBandE, alarmGivenNotBandNotE],multiConditional)
+            A = BernouliNode(p=alarmPs, name="Alarm")
+            A.setObservation(row["Alarm"])
+            pAlarmChildren.append(A)
+
+        # JohnCalls
+        if randomNums[3] > observationDropProb:
+            jPs = LinkerNode([row["Alarm"], johnGivenA, johnGivenNotA],conditionalJohn)
+            J = BernouliNode(p=jPs, name="JohnCalls")
+            J.setObservation(row["JohnCalls"])
+            pJohnChildren.append(J)
+
+        # MaryCalls
+        if randomNums[4] > observationDropProb:
+            mPs = LinkerNode([row["Alarm"], maryGivenA, maryGivenNotA],conditionalMary)
+            M = BernouliNode(p=mPs, name="MaryCalls")
+            M.setObservation(row["MaryCalls"])
+            pMaryChildren.append(M)
         if index > numSamples:
             break
 
-    burglary.initialize(burglaryChildren)
-    earthquake.initialize(earthquakeChildren)
-    alarm.initialize(alarmChildren)
-    johnCalls.initialize(johnChildren)
-    maryCalls.initialize(maryChildren)
+    # initialize the probability nodes
+    alarmGivenBandE.initialize(pAlarmChildren)
+    alarmGivenBandNotE.initialize(pAlarmChildren)
+    alarmGivenNotBandE.initialize(pAlarmChildren)
+    alarmGivenNotBandNotE.initialize(pAlarmChildren)
+    johnGivenA.initialize(pJohnChildren)
+    johnGivenNotA.initialize(pJohnChildren)
+    maryGivenA.initialize(pMaryChildren)
+    maryGivenNotA.initialize(pMaryChildren)
+    pBurglary.initialize(pBurglaryChildren)
+    pEarthquake.initialize(pEarthquakeChildren)
 
-    estimatedValues = [burglary, earthquake, alarm, johnCalls, maryCalls]
+    # combine together in 1 network
+    network = keptHyperNodes + probabilityNodes + \
+              pBurglaryChildren + pEarthquakeChildren + \
+              pAlarmChildren + pJohnChildren + pMaryChildren
 
-    network = priors + estimatedValues + burglaryChildren + earthquakeChildren + alarmChildren + johnChildren + maryChildren
-    unobservedIndices = np.arange(0, len(priors) + len(estimatedValues))
+    unobservedIndices = np.arange(0, len(keptHyperNodes + probabilityNodes))
 
     return network, unobservedIndices

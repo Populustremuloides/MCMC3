@@ -44,6 +44,7 @@ for i in range(5):
     for i in range(numSamples):
         for index in unobservedIndices:
             node = network[index]
+
             node.sample()
         dataDict = recordSamples(dataDict, network, unobservedIndices)
 

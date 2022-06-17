@@ -16,7 +16,7 @@ def recordSamples(dataDict, network, unobservedIndices):
     return dataDict
 
 
-outputFile = "network_samples_burglary.csv"
+outputFile = "network_samples_burglary_newProbs.csv"
 
 print("initializing network")
 network, unobservedIndices = generateNetwork()
@@ -28,7 +28,7 @@ for index in unobservedIndices:
     dataDict[network[index].name] = []
 
 # generate a gazillion samples
-numSamples = 100000
+numSamples = 500000
 saveInterval = 50000
 loop = tqdm(total=numSamples)
 for i in range(numSamples):
