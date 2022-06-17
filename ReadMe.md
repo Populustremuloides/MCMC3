@@ -24,3 +24,5 @@ Mean Parameter:
 ![plot](Figures/Figure_4_marygivenNotA_samples.png) 
 
 ![plot](Figures/Figure_5_burglary_samples.png)
+
+![plot](Figures/Figure_6_earthquake_samples.png)
