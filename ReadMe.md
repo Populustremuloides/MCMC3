@@ -30,3 +30,5 @@ Mean Parameter:
 ![plot](Figures/Figure_7_mary_params.png)
 
 ![plot](Figures/Figure_8_maryNo_params.png)
+
+![plot](Figures/Figure_9_burglary_params.png)
