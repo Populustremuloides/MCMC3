@@ -37,6 +37,8 @@ Mean Parameter:
 
 ![plot](Figures/Figure_11_mary_dropped.png)
 
+![plot](Figures/Figure_12_maryNot_dropped.png)
+
 ![plot](Figures/Figure_13_burglary_dropped.png)
 
 
