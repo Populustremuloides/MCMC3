@@ -19,6 +19,12 @@ Mean Parameter:
 
 ## Adjustments to the number of data points per estimated node:
 
+The following are the mixing plots across time for four different estimated parameters from the network that were learned from varying amounts of data.
+The number of data points included per estimated parameter is listed in the legend.
+Varying the size of the dataset had a larger impact on the accuracy of the network than any other experiment (except varying the dataset used -- see the end of this file).
+The main effect is a decrease in the mixing variance as a result of greater certainty about the true value of a parameter.
+You can see this in the figures by the fact that the colors representing larger dataset are nested inside the colors representing smaller datasets.
+
 ![plot](Figures/Figure_3_marygivenA_samples.png) 
 
 ![plot](Figures/Figure_4_marygivenNotA_samples.png) 
