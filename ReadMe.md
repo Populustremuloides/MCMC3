@@ -35,6 +35,9 @@ You can see this in the figures by the fact that the colors representing larger 
 
 ## Adjustments to the number of hyper parameters on the priors:
 
+As you might have guessed, varying the number of hyperparameters had little impact on the learnability of the parameters.
+You will notice that increasing hte number of hyperparameters slightly decreased the variance in the mixing.
+However, I am tempted to say that this effect might not even be statistically significant.
 
 ![plot](Figures/Figure_7_mary_params.png)
 
@@ -45,6 +48,13 @@ You can see this in the figures by the fact that the colors representing larger 
 ![plot](Figures/Figure_10_earthquake_params.png)
 
 ## Adjustments to the number of data nodes dropped:
+
+Compared to varying the size of the dataset, adjusting the number % of data nodes associated with each learned parameter had a very small effect.
+In one instance the mean of the mixing distribution shifted up, but in all other cases, it seems like the variance increases only slightly
+as a result of dropping nodes.
+I believe that this results from the fact that the main structure of the network is still largely preserved when only one or two nodes are dropped,
+whereas when a whole "row" of data is dropped, any information about connections between nodes that was in that data is lost.
+Losing entire rows is worse that losing the same number of nodes sparcely through the network.
 
 ![plot](Figures/Figure_11_mary_dropped.png)
 
